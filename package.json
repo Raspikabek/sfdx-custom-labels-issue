@@ -13,7 +13,12 @@
     "prettier": "prettier --write \"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"",
     "prettier:verify": "prettier --list-different \"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"",
     "postinstall": "husky install",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "scratch:create": "sfdx force:org:create -f config/project-scratch-def.json --setalias customlabelsissue --durationdays 1 --setdefaultusername --json --loglevel fatal",
+    "manifest:create": "sfdx force source manifest create -p force-app -o temp",
+    "source:deploy": "sfdx force source deploy --manifest temp/package.xml --predestructivechanges destructiveChangesPre.xml --postdestructivechanges ackage.xml --predestructivechanges destructiveChangesPre.xml --postdestructivechanges destructiveChangesPost.xml -g -c",
+    "build": "npm run scratch:create && npm run manifest:create && npm run source:deploy",
+    "mdapi:build": "sfdx force source convert -d temp_metadata && cp destructiveChanges*.xml temp_metadata  && sfdx force mdapi deploy -d temp_metadata -g -c -w 10"
   },
   "devDependencies": {
     "@lwc/eslint-plugin-lwc": "^1.1.2",
